@@ -122,5 +122,5 @@ def main():
     print(f"Estimated Total Plate Count (TPC): {tpc_result:.2e} CFU/mL")
     print("="*50)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
