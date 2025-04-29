@@ -1,43 +1,41 @@
-Python 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)] on win32
-Enter "help" below or click "Help" above for more information.
->>> import time
-... import os
-... from tabulate import tabulate
-... 
-... # Function to clear the screen
-... def clear_screen():
-...     os.system('cls' if os.name == 'nt' else 'clear')
-... 
-... # Function for chemical-themed loading animation
-... def chemical_loading_animation():
-...     bubbles = [
-...         "         ( )",
-...         "        (   )",
-...         "       (     )",
-...         "        (   )",
-...         "         ( )",
-...         "          .",
-...         "         . .",
-...         "        . . .",
-...         "       . . . .",
-...         "      . . . . .",
-...         "[ CHEMICAL REACTION INITIATED ]"
-...     ]
-... 
-...     for _ in range(2):  # Repeat the animation
-...         for frame in bubbles:
-...             clear_screen()
-...             print("\n" * 5)
-...             print(frame.center(80))
-...             time.sleep(0.2)
-... 
-... # Function to calculate Total Plate Count
-... def calculate_tpc(colony_counts, dilution_factors, volume_plated):
-...     total_cfu = 0
-...     for count, dilution in zip(colony_counts, dilution_factors):
-...         total_cfu += count / dilution
-... 
-...     average_cfu = total_cfu / len(colony_counts)
+import time
+import os
+from tabulate import tabulate
+
+# Function to clear the screen
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Function for chemical-themed loading animation
+def chemical_loading_animation():
+    bubbles = [
+        "         ( )",
+        "        (   )",
+        "       (     )",
+        "        (   )",
+        "         ( )",
+        "          .",
+        "         . .",
+        "        . . .",
+        "       . . . .",
+        "      . . . . .",
+        "[ CHEMICAL REACTION INITIATED ]"
+    ]
+
+    for _ in range(2):  # Repeat the animation
+        for frame in bubbles:
+            clear_screen()
+            print("\n" * 5)
+            print(frame.center(80))
+            time.sleep(0.2)
+
+# Function to calculate Total Plate Count
+def calculate_tpc(colony_counts, dilution_factors, volume_plated):
+    total_cfu = 0
+    for count, dilution in zip(colony_counts, dilution_factors):
+        total_cfu += count / dilution
+
+    average_cfu = total_cfu / len(colony_counts)
     tpc = average_cfu / volume_plated
     return tpc
 
@@ -129,3 +127,4 @@ def main():
     print("="*50)
 
 if _name_ == "_main_":
+    main()
