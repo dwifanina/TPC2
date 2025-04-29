@@ -1,130 +1,57 @@
-# Function to clear the screen
-import os
+import streamlit as st
+import random
+import time
 
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
+# Judul aplikasi
+st.title("Game Perhitungan Total Plate Count (TPC)")
 
-# Function for chemical-themed loading animation
-def chemical_loading_animation():
-    bubbles = [
-        "         ( )",
-        "        (   )",
-        "       (     )",
-        "        (   )",
-        "         ( )",
-        "          .",
-        "         . .",
-        "        . . .",
-        "       . . . .",
-        "      . . . . .",
-        "[ CHEMICAL REACTION INITIATED ]"
-    ]
+# Deskripsi game
+st.write("""
+Selamat datang di game perhitungan Total Plate Count (TPC)!
+Hitung koloni bakteri yang muncul di layar dan masukkan jumlah koloni yang Anda hitung.
+""")
 
-    for _ in range(2):  # Repeat the animation
-        for frame in bubbles:
-            clear_screen()
-            print("\n" * 5)
-            print(frame.center(80))
-            import time
-            time.sleep(0.2)
+# Input volume sampel
+volume_sampel = st.number_input("Masukkan Volume Sampel (mL):", min_value=1.0, step=0.1)
 
-# Function to calculate Total Plate Count
-def calculate_tpc(colony_counts, dilution_factors, volume_plated):
-    total_cfu = 0
-    for count, dilution in zip(colony_counts, dilution_factors):
-        total_cfu += count / dilution
+# Fungsi untuk memulai permainan
+def start_game():
+    st.session_state.count = 0
+    st.session_state.target = random.randint(25, 250)
+    st.session_state.start_time = time.time()
+    st.session_state.game_active = True
 
-    average_cfu = total_cfu / len(colony_counts)
-    tpc = average_cfu / volume_plated
-    return tpc
+# Fungsi untuk menghentikan permainan
+def stop_game():
+    st.session_state.game_active = False
 
-# Main program
-def main():
-    clear_screen()
-    print("="*80)
-    print("WELCOME TO THE TOTAL PLATE COUNT (TPC) CALCULATOR".center(80))
-    print("="*80)
-    print("\nPreparing virtual lab environment...\n")
-    import time
-    time.sleep(1)
+# Tombol untuk memulai permainan
+if st.button("Mulai Permainan"):
+    start_game()
 
-    # Run the animation
-    chemical_loading_animation()
+# Menampilkan koloni bakteri
+if 'game_active' in st.session_state and st.session_state.game_active:
+    st.write(f"Hitung koloni bakteri! Target: {st.session_state.target} koloni")
+    
+    # Menampilkan koloni bakteri
+    for _ in range(st.session_state.target):
+        st.image("bacteria_icon.png", width=50)  # Ganti dengan ikon bakteri yang sesuai
+        time.sleep(0.1)  # Delay untuk animasi
 
-    print("\nSystem Ready! Let's start your experiment...")
-    time.sleep(1.5)
-    clear_screen()
+    # Input jumlah koloni yang dihitung
+    st.session_state.count = st.number_input("Masukkan jumlah koloni yang Anda hitung:", min_value=0, step=1)
 
-    # Begin TPC Calculator
-    print("="*50)
-    print("        TOTAL PLATE COUNT (TPC) CALCULATOR")
-    print("="*50)
+    # Tombol untuk menghitung TPC
+    if st.button("Hitung TPC"):
+        if volume_sampel > 0:
+            tpc = st.session_state.count / volume_sampel
+            st.success(f"Total Plate Count (TPC): {tpc:.2f} CFU/mL")
+        else:
+            st.error("Volume sampel harus lebih besar dari 0.")
 
-    # Input number of plates
-    while True:
-        try:
-            num_plates = int(input("\nEnter the number of plates counted: "))
-            if num_plates <= 0:
-                print("Number of plates must be greater than 0.")
-                continue
-            break
-        except ValueError:
-            print("Invalid input. Please enter a number.")
-
-    colony_counts = []
-    dilution_factors = []
-
-    # Input data for each plate
-    for i in range(num_plates):
-        print(f"\n--- Plate {i+1} ---")
-        while True:
-            try:
-                count = int(input("Enter colony count: "))
-                if count < 0:
-                    print("Colony count cannot be negative.")
-                    continue
-                break
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-
-        while True:
-            try:
-                dilution = float(input("Enter dilution factor (e.g., for 10^-3 enter 0.001): "))
-                if dilution <= 0 or dilution >= 1:
-                    print("Dilution factor must be between 0 and 1.")
-                    continue
-                break
-            except ValueError:
-                print("Invalid input. Please enter a decimal number.")
-
-        colony_counts.append(count)
-        dilution_factors.append(dilution)
-
-    # Input volume plated
-    while True:
-        try:
-            volume_plated = float(input("\nEnter the volume plated (in mL, e.g., 0.1): "))
-            if volume_plated <= 0:
-                print("Volume must be greater than 0.")
-                continue
-            break
-        except ValueError:
-            print("Invalid input. Please enter a decimal number.")
-
-    # Display entered data as a table
-    table = []
-    for i in range(num_plates):
-        table.append([f"Plate {i+1}", colony_counts[i], dilution_factors[i]])
-
-    print("\nData Summary:")
-    print(tabulate(table, headers=["Plate", "Colony Count", "Dilution Factor"], tablefmt="fancy_grid"))
-
-    # Calculate and display TPC
-    tpc_result = calculate_tpc(colony_counts, dilution_factors, volume_plated)
-
-    print("\n" + "="*50)
-    print(f"Estimated Total Plate Count (TPC): {tpc_result:.2e} CFU/mL")
-    print("="*50)
-
-if __name__ == "__main__":
-    main()
+    # Tombol untuk menghentikan permainan
+    if st.button("Selesai"):
+        stop_game()
+        st.write("Permainan selesai! Terima kasih telah bermain.")
+else:
+    st.write("Tekan tombol 'Mulai Permainan' untuk memulai.")
