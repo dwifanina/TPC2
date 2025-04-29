@@ -25,6 +25,7 @@ def chemical_loading_animation():
             clear_screen()
             print("\n" * 5)
             print(frame.center(80))
+            import time
             time.sleep(0.2)
 
 # Function to calculate Total Plate Count
