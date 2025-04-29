@@ -44,6 +44,7 @@ def main():
     print("WELCOME TO THE TOTAL PLATE COUNT (TPC) CALCULATOR".center(80))
     print("="*80)
     print("\nPreparing virtual lab environment...\n")
+    import time
     time.sleep(1)
 
     # Run the animation
