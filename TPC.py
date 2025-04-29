@@ -1,7 +1,3 @@
-import time
-import os
-from tabulate import tabulate
-
 # Function to clear the screen
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
